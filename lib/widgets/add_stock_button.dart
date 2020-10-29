@@ -17,8 +17,10 @@ class AddStockButton extends StatelessWidget {
               context,
               MaterialPageRoute<Stock>(
                   builder: (BuildContext context) => AddStockPage()));
-          print('adding stock $result');
-          stocks.addStock(result);
+
+          if (result != null) {
+            stocks.addStock(result);
+          }
         });
   }
 }

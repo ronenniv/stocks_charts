@@ -7,4 +7,6 @@ Display stocks charts.
 Install on iOS or Android
 Tested on iOS 14
 
+<img src=>
+
 
