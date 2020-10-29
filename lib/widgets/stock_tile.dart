@@ -3,8 +3,9 @@ import 'package:stocks_charts/models/stock.dart';
 
 class StockTile extends StatelessWidget {
   final Stock stock;
+  final Function onTapFunc;
 
-  StockTile({@required this.stock});
+  StockTile({@required this.stock, @required this.onTapFunc});
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +56,7 @@ class StockTile extends StatelessWidget {
             ),
           ),
         ),
+        onTap: onTapFunc,
       ),
     );
   }

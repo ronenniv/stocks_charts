@@ -19,6 +19,7 @@ class Stock with ChangeNotifier {
   String get stockSymbol => _stockSymbol;
 
   set stockSymbol(String stockSymbol) {
+    assert(stockSymbol.toUpperCase() == stockSymbol);
     _stockSymbol = stockSymbol;
     notifyListeners();
   }
@@ -40,8 +41,8 @@ class Stock with ChangeNotifier {
     if (_companyName == '' || _companyLogoUrl == '') {
       var response = await http
           .get('$kAPIUrl/stock/profile2?symbol=$_stockSymbol&token=$kApiKey');
-      // print(
-      //     'urlCompanyName=$kAPIUrl/stock/profile2?symbol=$_stockSymbol&token=$kApiKey');
+      print(
+          'urlCompanyName=$kAPIUrl/stock/profile2?symbol=$_stockSymbol&token=$kApiKey');
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
         _companyName = jsonResponse['name'];
@@ -83,6 +84,7 @@ class Stock with ChangeNotifier {
   }
 
   Stock({stockSymbol, companyName = ''}) {
+    assert(stockSymbol.toUpperCase() == stockSymbol);
     _stockSymbol = stockSymbol;
     _companyName = companyName;
     _companyLogoUrl = null;

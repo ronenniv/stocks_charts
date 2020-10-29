@@ -23,33 +23,30 @@ class _AddStockPageState extends State<AddStockPage> {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child: CupertinoTextField(
+            child: TextField(
               showCursor: true,
-              placeholder: 'Enter Symbol',
               enableSuggestions: false,
               autocorrect: false,
               textCapitalization: TextCapitalization.characters,
               autofocus: true,
+              textAlign: TextAlign.center,
               style: TextStyle(fontSize: 40.0),
               keyboardType: TextInputType.text,
               onChanged: (text) {
                 symbolText = text;
-                print('text typed is $text');
                 if (errorMessage != null) {
                   setState(() {
                     errorMessage = '';
                   });
                 }
               },
-              // decoration: InputDecoration(
-              // hintText: 'Enter Symbol',
+              decoration: InputDecoration(
+                hintText: 'Enter Symbol',
+                errorText: errorMessage,
+                focusedErrorBorder: new OutlineInputBorder(
+                    borderSide: new BorderSide(color: Colors.blue, width: 0.0)),
+              ),
             ),
-            // hintStyle: TextStyle(color: Colors.black)),
-            // ),
-          ),
-          Text(
-            errorMessage,
-            style: TextStyle(color: Colors.red),
           ),
           Padding(
             padding: const EdgeInsets.all(20.0),
@@ -58,7 +55,6 @@ class _AddStockPageState extends State<AddStockPage> {
               onPressed: () async {
                 print('symbolLength=${symbolText.length}');
                 if (symbolText.length > 0) {
-                  print('symbolText=$symbolText');
                   Stock stock = Stock(stockSymbol: symbolText);
                   await stock.getCompanyDetailsFromUrl();
                   print('companyNameOnPressed=${stock.companyName}');
@@ -66,12 +62,14 @@ class _AddStockPageState extends State<AddStockPage> {
                     setState(() {
                       errorMessage = 'Error: Symbol not found';
                     });
+                  } else {
+                    Navigator.pop(context, stock);
                   }
                 }
               },
               child: Text(
                 'Submit',
-                style: TextStyle(fontSize: 40.0, color: Colors.black),
+                style: TextStyle(fontSize: 40.0, color: Colors.white),
               ),
             ),
           )
