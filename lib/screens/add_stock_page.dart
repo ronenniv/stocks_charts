@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stocks_charts/models/stock.dart';
+import 'package:stocks_charts/constants.dart';
 
 class AddStockPage extends StatefulWidget {
   @override
@@ -15,7 +16,7 @@ class _AddStockPageState extends State<AddStockPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add New Stock'),
+        title: kAddStockAppBarText,
       ),
       body: Center(
           child: Column(
@@ -32,6 +33,12 @@ class _AddStockPageState extends State<AddStockPage> {
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 40.0),
               keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                hintText: kHintText,
+                errorText: errorMessage,
+                focusedErrorBorder: new OutlineInputBorder(
+                    borderSide: new BorderSide(color: Colors.blue, width: 0.0)),
+              ),
               onChanged: (text) {
                 symbolText = text;
                 if (errorMessage != null) {
@@ -40,12 +47,6 @@ class _AddStockPageState extends State<AddStockPage> {
                   });
                 }
               },
-              decoration: InputDecoration(
-                hintText: 'Enter Symbol',
-                errorText: errorMessage,
-                focusedErrorBorder: new OutlineInputBorder(
-                    borderSide: new BorderSide(color: Colors.blue, width: 0.0)),
-              ),
             ),
           ),
           Padding(
@@ -58,9 +59,9 @@ class _AddStockPageState extends State<AddStockPage> {
                   Stock stock = Stock(stockSymbol: symbolText);
                   await stock.getCompanyDetailsFromUrl();
                   print('companyNameOnPressed=${stock.companyName}');
-                  if (stock.companyName == null) {
+                  if (stock.companyName == null || stock.companyName == '') {
                     setState(() {
-                      errorMessage = 'Error: Symbol not found';
+                      errorMessage = kErrorMessageText;
                     });
                   } else {
                     Navigator.pop(context, stock);
@@ -69,10 +70,10 @@ class _AddStockPageState extends State<AddStockPage> {
               },
               child: Text(
                 'Submit',
-                style: TextStyle(fontSize: 40.0, color: Colors.white),
+                style: kSubmitButtonTextStyle,
               ),
             ),
-          )
+          ),
         ],
       )),
     );

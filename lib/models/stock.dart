@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:stocks_charts/constants.dart';
 
 // const kAlphavantageUrl = 'https://www.alphavantage.co';
 // const kApiKey = 'SWHTEYQX6EPUOEI8';
@@ -12,7 +13,7 @@ class Stock with ChangeNotifier {
   String _stockSymbol;
   String _companyName;
   String _companyLogoUrl;
-  String _exchange;
+  // String _exchange;
   double _lastPrice;
   double _changeFromClosePrice;
 
@@ -45,19 +46,26 @@ class Stock with ChangeNotifier {
           'urlCompanyName=$kAPIUrl/stock/profile2?symbol=$_stockSymbol&token=$kApiKey');
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
-        _companyName = jsonResponse['name'];
-        _companyLogoUrl = jsonResponse['logo'];
-        // print('jsonResponse[name]=${jsonResponse['name']}');
-        // print('jsonResponse[logo]=${jsonResponse['logo']}');
-      } else {
-        print(response.statusCode);
-        _companyName = '';
-        _companyLogoUrl = '';
+        if (jsonResponse.length > 0) {
+          _companyName = jsonResponse['name'];
+          _companyName = jsonResponse['name'].length > kMaxCharCompanyName
+              ? jsonResponse['name']
+                  .substring(0, kMaxCharCompanyName - 1)
+                  .trim()
+              : jsonResponse['name'];
+          _companyLogoUrl = jsonResponse['logo'];
+          return;
+        }
       }
+      // statusCode is error on stock not found
+      // if stock not exist Finnhub return code 200 with empty JSON
+      print(response.statusCode);
+      _companyName = '';
+      _companyLogoUrl = '';
     }
   }
 
-  void getCurrentPrice() async {
+  Future<void> getCurrentPrice() async {
     var response =
         await http.get('$kAPIUrl/quote?symbol=$_stockSymbol&token=$kApiKey');
     // print('url=$kAPIUrl/quote?symbol=$_stockSymbol&token=$kApiKey');
@@ -76,11 +84,12 @@ class Stock with ChangeNotifier {
       _lastPrice = 0;
       _changeFromClosePrice = 0;
     }
+    notifyListeners();
   }
 
-  void refreshDetails() {
-    getCompanyDetailsFromUrl();
-    getCurrentPrice();
+  Future<void> refreshDetails() async {
+    await getCompanyDetailsFromUrl();
+    await getCurrentPrice();
   }
 
   Stock({stockSymbol, companyName = ''}) {
@@ -88,7 +97,7 @@ class Stock with ChangeNotifier {
     _stockSymbol = stockSymbol;
     _companyName = companyName;
     _companyLogoUrl = null;
-    _exchange = null;
+    // _exchange = null;
     _lastPrice = 0;
     _changeFromClosePrice = 0;
   }

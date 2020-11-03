@@ -11,16 +11,24 @@ class StockList with ChangeNotifier {
 
   int get getLength => _stockList.length;
 
-  void addStock(Stock stock) {
+  Stock addStock(Stock stock) {
     assert(stock != null);
     for (var stk in _stockList) {
       if (stk.stockSymbol == stock.stockSymbol) {
-        print('stock ${stock.stockSymbol} already exasit in list');
-        return;
+        print('stock ${stock.stockSymbol} already exist in list');
+        return null;
       }
     }
     stock.refreshDetails();
     _stockList.add(stock);
+    notifyListeners();
+    return stock;
+  }
+
+  void refreshStockPrice() {
+    for (Stock stock in _stockList) {
+      stock.getCurrentPrice();
+    }
     notifyListeners();
   }
 }

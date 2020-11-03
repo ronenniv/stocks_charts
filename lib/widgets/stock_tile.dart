@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stocks_charts/models/stock.dart';
+import 'package:stocks_charts/constants.dart';
 
 class StockTile extends StatelessWidget {
   final Stock stock;
@@ -13,6 +14,8 @@ class StockTile extends StatelessWidget {
       padding: const EdgeInsets.all(4.0),
       child: GestureDetector(
         child: Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
           color: Colors.lightBlueAccent,
           child: Padding(
             padding: const EdgeInsets.all(10.0),
@@ -24,13 +27,11 @@ class StockTile extends StatelessWidget {
                   children: [
                     Text(
                       stock.stockSymbol,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 40.0),
+                      style: kStockSymbolTextStyle,
                     ),
                     Text(
                       stock.lastPrice.toString(),
-                      style: TextStyle(
-                          fontSize: 40.0, fontWeight: FontWeight.w300),
+                      style: kLastPriceTextStyle,
                     )
                   ],
                 ),
@@ -39,8 +40,7 @@ class StockTile extends StatelessWidget {
                   children: [
                     Text(
                       stock.companyName,
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.w300),
+                      style: kCompanyNameTextStyle,
                     ),
                     Text(
                       '${stock.priceChange.toString()}%',

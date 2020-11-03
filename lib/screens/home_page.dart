@@ -5,6 +5,8 @@ import 'chart_page.dart';
 import 'package:provider/provider.dart';
 import 'package:stocks_charts/widgets/stocks_list_view.dart';
 import 'package:stocks_charts/widgets/add_stock_button.dart';
+import 'package:stocks_charts/constants.dart';
+import 'package:stocks_charts/widgets/refresh_button.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -13,13 +15,9 @@ class HomePage extends StatelessWidget {
       create: (context) => StockList(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Stock Qoutes'),
+          title: kHomeAppBarText,
           actions: [
-            IconButton(
-                icon: Icon(Icons.refresh),
-                onPressed: () {
-                  // TODO implement the refresh button
-                }),
+            RefreshButton(),
           ],
         ),
         floatingActionButton: AddStockButton(),

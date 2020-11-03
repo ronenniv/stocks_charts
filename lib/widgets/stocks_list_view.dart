@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stocks_charts/screens/chart_page.dart';
 import 'stock_tile.dart';
 import 'package:stocks_charts/models/stock_list.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,11 @@ class StocksListView extends StatelessWidget {
           return StockTile(
               stock: stocks.getStock(index),
               onTapFunc: () {
-                print('onTap $index');
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            ChartPage(stock: stocks.getStock(index))));
               });
         },
         padding: EdgeInsets.all(8.0),

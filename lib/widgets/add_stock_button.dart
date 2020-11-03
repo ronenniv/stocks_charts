@@ -19,7 +19,18 @@ class AddStockButton extends StatelessWidget {
                   builder: (BuildContext context) => AddStockPage()));
 
           if (result != null) {
-            stocks.addStock(result);
+            String snackBarText;
+            if (stocks.addStock(result) == null) {
+              snackBarText = 'Stock ${result.stockSymbol} already exist';
+            } else {
+              snackBarText = '${result.stockSymbol} added to the list';
+            }
+            final snackBar = SnackBar(
+                content: Text(
+              snackBarText,
+              style: TextStyle(fontSize: 24.0),
+            ));
+            Scaffold.of(context).showSnackBar(snackBar);
           }
         });
   }
