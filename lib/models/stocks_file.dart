@@ -1,30 +1,37 @@
 import 'dart:io';
 import 'package:stocks_charts/constants.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:stocks_charts/models/stock.dart';
+import 'package:stocks_charts/models/stock_list.dart';
 
 class StocksFile {
+  File fileHandler;
+  static const String kFieldDivider = '|';
+
   StocksFile() {
     initializeFile();
   }
 
-  Future<String> initializeFile() async {
+  Future<void> initializeFile() async {
     final directory =
         await getApplicationDocumentsDirectory(); // get local path
-    final file = File(directory.path + kStocksFilename);
-    //print('directory.path=${directory.path + kStocksFilename}');
-    //file.create();
-    await file.writeAsString('AAPL|Apple Inc\n', flush: true);
-    await file.writeAsString('DOX|Amdocs Inc\n',
+    final fileHandler = File(directory.path + kStocksFilename);
+    await fileHandler.writeAsString('AAPL|Apple Inc\n', flush: true);
+    await fileHandler.writeAsString('DOX|Amdocs Inc\n',
         mode: FileMode.append, flush: true);
-    //file.writeAsStringSync('DOX|Amdocs Inc\n', mode: FileMode.append);
 
-    var line = await file.readAsLines();
+    var line = await fileHandler.readAsLines();
     print('line=$line, line len=${line.length}');
-    line = await file.readAsLines();
+    line = await fileHandler.readAsLines();
     for (var ln in line) {
       print('$ln');
     }
+  }
 
-    return directory.path;
+  void saveToFile(Stock stock) {
+    fileHandler.writeAsString(
+        stock.stockSymbol + kFieldDivider + stock.companyName,
+        mode: FileMode.append,
+        flush: true);
   }
 }
