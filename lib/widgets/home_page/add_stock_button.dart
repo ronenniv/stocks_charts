@@ -26,10 +26,12 @@ class AddStockButton extends StatelessWidget {
               snackBarText = '${result.stockSymbol} added to the list';
             }
             final snackBar = SnackBar(
-                content: Text(
-              snackBarText,
-              style: TextStyle(fontSize: 24.0),
-            ));
+              content: Text(
+                snackBarText,
+                style: TextStyle(fontSize: 24.0),
+              ),
+              duration: Duration(seconds: 2),
+            );
             Scaffold.of(context).showSnackBar(snackBar);
           }
         });

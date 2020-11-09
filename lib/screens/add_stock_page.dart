@@ -19,63 +19,63 @@ class _AddStockPageState extends State<AddStockPage> {
         title: kAddStockAppBarText,
       ),
       body: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child: TextField(
-              showCursor: true,
-              enableSuggestions: false,
-              autocorrect: false,
-              textCapitalization: TextCapitalization.characters,
-              autofocus: true,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 40.0),
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(
-                hintText: kHintText,
-                errorText: errorMessage,
-                focusedErrorBorder: new OutlineInputBorder(
-                    borderSide: new BorderSide(color: Colors.blue, width: 0.0)),
-              ),
-              onChanged: (text) {
-                symbolText = text;
-                if (errorMessage != null) {
-                  setState(() {
-                    errorMessage = '';
-                  });
-                }
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: CupertinoButton(
-              color: Colors.lightBlue,
-              onPressed: () async {
-                print('symbolLength=${symbolText.length}');
-                if (symbolText.length > 0) {
-                  Stock stock = Stock(stockSymbol: symbolText);
-                  await stock.getCompanyDetailsFromUrl();
-                  print('companyNameOnPressed=${stock.companyName}');
-                  if (stock.companyName == null || stock.companyName == '') {
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: TextField(
+                showCursor: true,
+                enableSuggestions: false,
+                autocorrect: false,
+                textCapitalization: TextCapitalization.characters,
+                autofocus: true,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 40.0),
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(
+                  hintText: kHintText,
+                  errorText: errorMessage,
+                  focusedErrorBorder: new OutlineInputBorder(
+                      borderSide:
+                          new BorderSide(color: Colors.blue, width: 0.0)),
+                ),
+                onChanged: (text) {
+                  symbolText = text;
+                  if (errorMessage != null) {
                     setState(() {
-                      errorMessage = kErrorMessageText;
+                      errorMessage = '';
                     });
-                  } else {
-                    Navigator.pop(context, stock);
                   }
-                }
-              },
-              child: Text(
-                'Submit',
-                style: kSubmitButtonTextStyle,
+                },
               ),
             ),
-          ),
-        ],
-      )),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: CupertinoButton(
+                color: Colors.lightBlue,
+                onPressed: () async {
+                  if (symbolText.length > 0) {
+                    Stock stock = Stock(stockSymbol: symbolText);
+                    await stock.getCompanyDetailsFromUrl();
+                    if (stock.companyName == null || stock.companyName == '') {
+                      setState(() {
+                        errorMessage = kErrorMessageText;
+                      });
+                    } else {
+                      Navigator.pop(context, stock);
+                    }
+                  }
+                },
+                child: Text(
+                  'Submit',
+                  style: kSubmitButtonTextStyle,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

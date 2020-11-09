@@ -59,7 +59,6 @@ class Stock with ChangeNotifier {
       }
       // statusCode is error on stock not found
       // if stock not exist Finnhub return code 200 with empty JSON
-      print(response.statusCode);
       _companyName = '';
       _companyLogoUrl = '';
     }

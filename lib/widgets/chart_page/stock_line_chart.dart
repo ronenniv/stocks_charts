@@ -13,9 +13,8 @@ class StockLineChart extends StatelessWidget {
   static const yAxisCostName = 'Cost';
   static const yAxisCostTitleName = 'Closing Cost';
   static const yAxisVolumeName = 'Volume';
-  static const yAxisVolumeTitleName = 'Total Volumne';
+  static const yAxisVolumeTitleName = 'Volume';
   static const xAxisName = 'Date';
-  static const xAxisTitleName = 'Date';
 
   final bool flagLandscape;
   final ListStockDataSeries stockDataSeries;
@@ -25,18 +24,21 @@ class StockLineChart extends StatelessWidget {
     return SfCartesianChart(
       primaryXAxis: CategoryAxis(
         name: xAxisName,
-        title: flagLandscape ? null : AxisTitle(text: xAxisTitleName),
       ),
       primaryYAxis: NumericAxis(
+        // closing cost y axis
         opposedPosition: false,
         name: yAxisCostName,
         title: flagLandscape ? AxisTitle(text: yAxisCostName) : null,
       ),
       axes: <ChartAxis>[
+        // volume y Axis
         NumericAxis(
           opposedPosition: true,
           name: yAxisVolumeName,
           title: flagLandscape ? AxisTitle(text: yAxisVolumeName) : null,
+          maximum: stockDataSeries.getHighestVolume() *
+              1.2, // add 20% to volume y axis
         )
       ],
       title: ChartTitle(
@@ -45,6 +47,16 @@ class StockLineChart extends StatelessWidget {
       legend: Legend(isVisible: true),
       tooltipBehavior: TooltipBehavior(enable: true),
       series: <ChartSeries<StockDataSeries, String>>[
+        ColumnSeries(
+          dataSource: stockDataSeries.valueDataStockSeries,
+          xValueMapper: (StockDataSeries dataSeries, _) => dataSeries.date,
+          yValueMapper: (StockDataSeries dataSeries, _) => dataSeries.volume,
+          yAxisName: yAxisVolumeName,
+          enableTooltip: true,
+          legendItemText: yAxisVolumeTitleName,
+          name: yAxisVolumeTitleName,
+          color: Colors.lightBlueAccent,
+        ),
         LineSeries<StockDataSeries, String>(
           dataSource: stockDataSeries.valueDataStockSeries,
           xValueMapper: (StockDataSeries dataSeries, _) => dataSeries.date,
@@ -52,25 +64,12 @@ class StockLineChart extends StatelessWidget {
           yAxisName: yAxisCostName,
           dataLabelSettings: DataLabelSettings(isVisible: true),
           enableTooltip: true,
+          color: Colors.black45,
           legendItemText: yAxisCostTitleName,
           name: yAxisCostTitleName,
           markerSettings: MarkerSettings(
             isVisible: true,
             shape: DataMarkerType.rectangle,
-          ),
-        ),
-        ColumnSeries(
-          dataSource: stockDataSeries.valueDataStockSeries,
-          xValueMapper: (StockDataSeries dataSeries, _) => dataSeries.date,
-          yValueMapper: (StockDataSeries dataSeries, _) => dataSeries.volume,
-          yAxisName: yAxisVolumeName,
-          dataLabelSettings: DataLabelSettings(isVisible: true),
-          enableTooltip: true,
-          legendItemText: yAxisVolumeTitleName,
-          name: yAxisVolumeTitleName,
-          markerSettings: MarkerSettings(
-            isVisible: true,
-            shape: DataMarkerType.diamond,
           ),
         ),
       ],

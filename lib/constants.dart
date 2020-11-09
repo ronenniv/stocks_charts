@@ -21,3 +21,4 @@ const kChartAppBarText = Text('Stock Chart');
 
 // home_page
 const kHomeAppBarText = Text('Stock Quotes');
+const kStocksFilename = '/stocks_list.txt';

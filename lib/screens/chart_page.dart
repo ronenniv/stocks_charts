@@ -1,10 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:stocks_charts/models/stock.dart';
 import 'package:stocks_charts/constants.dart';
-
 import 'package:stocks_charts/models/list_stock_data_series.dart';
-import 'package:stocks_charts/widgets/stock_line_chart.dart';
+import 'package:stocks_charts/widgets/chart_page/stock_line_chart.dart';
 
 class ChartPage extends StatefulWidget {
   final Stock stock;
@@ -17,6 +16,7 @@ class ChartPage extends StatefulWidget {
 
 class _ChartPageState extends State<ChartPage> {
   ListStockDataSeries listStockDataSeries;
+  Future<bool> _getData;
 
   void initState() {
     super.initState();
@@ -24,6 +24,7 @@ class _ChartPageState extends State<ChartPage> {
     assert(widget.stock.stockSymbol != null);
     assert(widget.stock.companyName != null);
     listStockDataSeries = ListStockDataSeries(widget.stock);
+    _getData = listStockDataSeries.loadDataSeries();
   }
 
   @override
@@ -35,10 +36,19 @@ class _ChartPageState extends State<ChartPage> {
       appBar: AppBar(title: kChartAppBarText),
       body: Center(
         child: Container(
-          padding: EdgeInsets.all(20.0),
-          child: StockLineChart(
-            stockDataSeries: listStockDataSeries,
-            flagLandscape: flagLandscape,
+          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
+          child: FutureBuilder(
+            future: _getData,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return StockLineChart(
+                  stockDataSeries: listStockDataSeries,
+                  flagLandscape: flagLandscape,
+                );
+              } else {
+                return CupertinoActivityIndicator();
+              }
+            },
           ),
         ),
       ),
